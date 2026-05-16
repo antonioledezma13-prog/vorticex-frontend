@@ -1,0 +1,203 @@
+.market-card {
+  padding: 18px;
+  flex: 1;
+  min-width: 0;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.market-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(245, 166, 35, 0.2);
+}
+
+.market-card.is-live {
+  border-color: rgba(224, 26, 26, 0.35);
+}
+
+.card-live-glow {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 60%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(224, 26, 26, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Header */
+.mc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cat-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.cat-badge.sport {
+  background: rgba(224, 26, 26, 0.15);
+  color: var(--red-bright);
+  border: 1px solid rgba(224, 26, 26, 0.3);
+}
+.cat-badge.politics {
+  background: rgba(245, 166, 35, 0.12);
+  color: var(--gold);
+  border: 1px solid rgba(245, 166, 35, 0.25);
+}
+
+.mc-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 3px;
+  letter-spacing: 0.02em;
+}
+
+.mc-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+/* Contenders */
+.mc-contenders {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.contender {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.contender-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.team-abbr {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+}
+
+.politician-icon svg {
+  width: 24px;
+  height: 24px;
+  color: var(--text-secondary);
+}
+
+.contender-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.vs-divider {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+}
+
+/* Sparklines */
+.mc-sparklines {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+/* Probs */
+.mc-probs {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.prob-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.prob-col.right {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.prob-pct {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+.prob-pct.red {
+  color: var(--red-bright);
+  text-shadow: 0 0 16px rgba(224, 26, 26, 0.5);
+}
+.prob-pct.gold {
+  color: var(--gold);
+  text-shadow: 0 0 16px var(--gold-glow);
+}
+
+.prob-name {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.prob-odds {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.prob-sep {
+  width: 1px;
+  height: 40px;
+  background: var(--border);
+  margin: 0 12px;
+  flex-shrink: 0;
+}
+
+/* Progress bar */
+.mc-progress-bar {
+  height: 3px;
+  background: rgba(245, 166, 35, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), var(--red-dim));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}

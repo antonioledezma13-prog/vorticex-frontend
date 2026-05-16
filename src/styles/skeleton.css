@@ -1,0 +1,77 @@
+/* Agregar al final de global.css */
+
+/* ── SKELETON LOADERS ── */
+.skeleton-card {
+  padding: 18px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sk-line {
+  border-radius: 4px;
+  background: linear-gradient(90deg,
+    rgba(245,166,35,0.06) 25%,
+    rgba(245,166,35,0.12) 50%,
+    rgba(245,166,35,0.06) 75%
+  );
+  background-size: 200% 100%;
+  animation: sk-shimmer 1.5s infinite;
+  margin-bottom: 10px;
+  height: 12px;
+}
+.sk-short { width: 40%; }
+.sk-med   { width: 60%; }
+.sk-long  { width: 80%; }
+.sk-full  { width: 100%; height: 4px; }
+
+.sk-avatars {
+  display: flex;
+  justify-content: space-around;
+  margin: 16px 0;
+}
+.sk-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(245,166,35,0.08);
+  animation: sk-shimmer 1.5s infinite;
+}
+
+@keyframes sk-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── NO EVENTS ── */
+.no-events {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px;
+  color: var(--text-dim);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.no-events span { font-size: 32px; }
+.no-events p    { font-size: 14px; font-weight: 500; text-align: center; }
+
+/* ── FEED RESULT BADGES ── */
+.feed-time-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.feed-result {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.feed-result.correct   { background: rgba(34,197,94,0.15); color: #22c55e; }
+.feed-result.incorrect { background: rgba(224,26,26,0.15);  color: var(--red-bright); }

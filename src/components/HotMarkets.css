@@ -1,0 +1,109 @@
+/* HotMarkets.css */
+.hot-markets {
+  padding: 18px;
+}
+
+.hm-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hm-row {
+  border-bottom: 1px solid rgba(245, 166, 35, 0.07);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.hm-row:last-child { border-bottom: none; }
+.hm-row:hover { background: rgba(245, 166, 35, 0.04); }
+
+.hm-name-cell {
+  padding: 9px 8px 9px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.hm-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.hm-dot.sport    { background: var(--red-bright); box-shadow: 0 0 6px var(--red-bright); }
+.hm-dot.politics { background: var(--gold);       box-shadow: 0 0 6px var(--gold-glow); }
+
+.hm-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.hm-odds-cell {
+  padding: 9px 10px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  white-space: nowrap;
+  text-align: right;
+}
+.hm-odds-cell.red  { color: var(--red-bright); }
+.hm-odds-cell.gold { color: var(--gold); }
+
+.hm-trend-cell { padding: 9px 0 9px 8px; text-align: right; }
+.hm-trend      { font-size: 11px; font-weight: 700; }
+.hm-trend.up      { color: #22c55e; }
+.hm-trend.down    { color: var(--red-bright); }
+.hm-trend.neutral { color: var(--text-dim); }
+
+/* Leaderboard mini */
+.hm-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 14px 0 10px;
+}
+
+.hm-leaderboard-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.hm-tipster-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(245, 166, 35, 0.05);
+}
+.hm-tipster-row:last-child { border-bottom: none; }
+
+.hm-tipster-rank {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  width: 20px;
+}
+.hm-tipster-medal { font-size: 14px; }
+.hm-tipster-name  {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hm-tipster-score {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--gold);
+  text-shadow: 0 0 8px var(--gold-glow);
+}

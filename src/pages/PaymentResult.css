@@ -1,0 +1,74 @@
+/* src/pages/PaymentResult.css */
+/* Compartido por PaymentSuccess.jsx y PaymentCancel.jsx */
+
+.payment-result-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.pr-card {
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pr-icon {
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.pr-icon.spin {
+  animation: prSpin 1.2s linear infinite;
+}
+
+@keyframes prSpin {
+  to { transform: rotate(360deg); }
+}
+
+.pr-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary, #f1f1f1);
+}
+
+.pr-title.gold  { color: #f5a623; }
+.pr-title.red   { color: #e01a1a; }
+
+.pr-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary, #9ca3af);
+  max-width: 340px;
+  line-height: 1.5;
+}
+
+.pr-detail {
+  font-size: 0.85rem;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+}
+
+.pr-btn {
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 280px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.pr-btn:hover { opacity: 0.85; }
