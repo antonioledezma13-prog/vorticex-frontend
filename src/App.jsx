@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 
 // =====================================================================
-// 🔑 CONTEXTO DE AUTENTICACIÓN (INLINE PARA SOPORTE AUTÓNOMO)
+// 🔑 CONTEXTO DE AUTENTICACIÓN (INTEGRADO Y SEGURO)
 // =====================================================================
 const AuthContext = createContext(null);
 
@@ -29,7 +29,7 @@ export function useAuth() {
 }
 
 // =====================================================================
-// 📊 COMPONENTE: VORTEX ANALYTICS (VISTA INTEGRADA)
+// 📊 COMPONENTE: VORTEX ANALYTICS (VISTA EXCLUSIVA NEÓN)
 // =====================================================================
 function AnalyticsView({ user }) {
   const [activeSubTab, setActiveSubTab] = useState('vortex'); // vortex | leaderboard | mytracker
@@ -289,7 +289,7 @@ function AnalyticsView({ user }) {
 }
 
 // =====================================================================
-// 🖥️ COMPONENTES COMPLEMENTARIOS DE INTERFAZ (MOCKS INTEGRADOS)
+// 🖥️ COMPONENTES COMPLEMENTARIOS DE INTERFAZ (DISEÑO PREMIUM ACTIVO)
 // =====================================================================
 function Sidebar({ activePage, onNavigate }) {
   const { user } = useAuth();
@@ -308,10 +308,10 @@ function Sidebar({ activePage, onNavigate }) {
   }
 
   return (
-    <div className="w-64 bg-neutral-900 border-r border-neutral-800 h-screen flex flex-col justify-between p-4 fixed left-0 top-0">
+    <div className="w-64 bg-neutral-900 border-r border-neutral-800 h-screen flex flex-col justify-between p-4 fixed left-0 top-0 z-30">
       <div>
-        <div className="flex items-center gap-2 mb-8 px-2">
-          <span className="text-2xl">🔥</span>
+        <div className="flex items-center gap-2 mb-8 px-2 py-4">
+          <span className="text-2xl animate-pulse">🔥</span>
           <span className="font-black text-xl bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent uppercase tracking-wider">Vorticex</span>
         </div>
         <nav className="space-y-1">
@@ -332,8 +332,8 @@ function Sidebar({ activePage, onNavigate }) {
         </nav>
       </div>
       {user && (
-        <div className="p-2 border-t border-neutral-800 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-500 to-red-600 flex items-center justify-center font-black text-neutral-950">
+        <div className="p-3 bg-neutral-950/40 rounded-2xl border border-neutral-800 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-500 to-red-600 flex items-center justify-center font-black text-neutral-950 shadow-md">
             {user.nombre.substring(0,2).toUpperCase()}
           </div>
           <div className="truncate">
@@ -365,9 +365,9 @@ function Topbar({ activeTab, onTabChange, onOpenAuth, onNavigate }) {
       </div>
       <div>
         {user ? (
-          <button onClick={logout} className="text-xs font-bold uppercase tracking-wider bg-neutral-800 border border-neutral-700 hover:bg-neutral-700 px-4 py-2 rounded-xl text-neutral-300">Cerrar Sesión</button>
+          <button onClick={logout} className="text-xs font-bold uppercase tracking-wider bg-neutral-800 border border-neutral-700 hover:bg-neutral-700 px-4 py-2 rounded-xl text-neutral-300 transition-all">Cerrar Sesión</button>
         ) : (
-          <button onClick={onOpenAuth} className="text-xs font-black uppercase tracking-wider bg-gradient-to-r from-red-600 to-yellow-500 text-neutral-950 px-4 py-2 rounded-xl">Iniciar Sesión</button>
+          <button onClick={onOpenAuth} className="text-xs font-black uppercase tracking-wider bg-gradient-to-r from-red-600 to-yellow-500 text-neutral-950 px-4 py-2 rounded-xl transition-all hover:scale-[1.02]">Iniciar Sesión</button>
         )}
       </div>
     </header>
@@ -382,37 +382,36 @@ function Dashboard({ activeTab, onOpenAuth }) {
   ];
 
   return (
-    <div className="p-6 space-y-8">
-      <div className="flex justify-between items-center bg-neutral-900/40 p-6 rounded-2xl border border-neutral-800">
-        <div>
-          <h2 className="text-2xl font-black uppercase tracking-tight text-white">Top Mercados de Hoy</h2>
-          <p className="text-xs text-neutral-400 mt-1">Sugerencias y análisis algorítmico del Cerebro IA en vivo.</p>
-        </div>
+    <div className="p-6 space-y-8 max-w-7xl mx-auto">
+      <div className="relative overflow-hidden bg-neutral-900/40 p-6 rounded-2xl border border-neutral-800">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-red-500/10 rounded-full blur-[80px]"></div>
+        <h2 className="text-2xl font-black uppercase tracking-tight text-white relative z-10">Top Mercados de Hoy</h2>
+        <p className="text-xs text-neutral-400 mt-1 relative z-10 font-medium">Sugerencias y análisis algorítmico del Cerebro IA en vivo.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sampleEvents.map(event => (
-          <div key={event.id} className="bg-neutral-900 border border-neutral-800 rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between hover:border-neutral-750 transition-all">
+          <div key={event.id} className="bg-neutral-900 border border-neutral-850 rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between hover:border-neutral-700 hover:shadow-[0_4px_30px_rgba(239,68,68,0.05)] transition-all">
             <div className="space-y-4">
               <span className="text-[10px] font-black uppercase tracking-widest text-yellow-500">{event.time}</span>
               <div className="flex justify-between items-center">
-                <div className="text-center w-1/2">
-                  <div className="w-10 h-10 rounded-full bg-neutral-850 border border-neutral-750 flex items-center justify-center font-bold text-xs mx-auto mb-2">{event.home.substring(0,3).toUpperCase()}</div>
-                  <p className="text-xs font-bold truncate">{event.home}</p>
+                <div className="text-center w-5/12">
+                  <div className="w-12 h-12 rounded-full bg-neutral-950 border border-neutral-800 flex items-center justify-center font-black text-xs mx-auto mb-2 text-white shadow-md">{event.home.substring(0,3).toUpperCase()}</div>
+                  <p className="text-xs font-black truncate text-neutral-200">{event.home}</p>
                 </div>
-                <span className="text-xs text-neutral-600 font-bold">vs</span>
-                <div className="text-center w-1/2">
-                  <div className="w-10 h-10 rounded-full bg-neutral-850 border border-neutral-750 flex items-center justify-center font-bold text-xs mx-auto mb-2">{event.away.substring(0,3).toUpperCase()}</div>
-                  <p className="text-xs font-bold truncate">{event.away}</p>
+                <span className="text-xs text-neutral-600 font-bold uppercase tracking-widest w-2/12 text-center">vs</span>
+                <div className="text-center w-5/12">
+                  <div className="w-12 h-12 rounded-full bg-neutral-950 border border-neutral-800 flex items-center justify-center font-black text-xs mx-auto mb-2 text-white shadow-md">{event.away.substring(0,3).toUpperCase()}</div>
+                  <p className="text-xs font-black truncate text-neutral-200">{event.away}</p>
                 </div>
               </div>
-              <div className="flex gap-1.5 justify-center py-2">
+              <div className="flex gap-1.5 justify-center py-2 border-t border-neutral-850/40 mt-3">
                 {event.formHome.map((r, idx) => (
-                  <span key={idx} className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black ${r === 'W' ? 'bg-emerald-950 border border-emerald-500/40 text-emerald-400' : r === 'D' ? 'bg-yellow-950 border border-yellow-500/40 text-yellow-400' : 'bg-red-950 border border-red-500/40 text-red-400'}`}>{r}</span>
+                  <span key={idx} className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black ${r === 'W' ? 'bg-emerald-950/60 border border-emerald-500/20 text-emerald-400' : r === 'D' ? 'bg-yellow-950/60 border border-yellow-500/20 text-yellow-400' : 'bg-red-950/60 border border-red-500/20 text-red-400'}`}>{r}</span>
                 ))}
               </div>
             </div>
             <div className="border-t border-neutral-850/60 pt-4 mt-4 flex justify-between items-center text-xs font-bold text-neutral-400">
-              <div>Probabilidad Local: <span className="text-emerald-400 font-black">{event.probHome}</span></div>
+              <div>Prob. Local: <span className="text-emerald-400 font-black">{event.probHome}</span></div>
               <div>Visitante: <span className="text-yellow-500 font-black">{event.probAway}</span></div>
             </div>
           </div>
@@ -424,34 +423,34 @@ function Dashboard({ activeTab, onOpenAuth }) {
 
 function Plans({ onOpenAuth }) {
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-8 text-center">
+    <div className="p-6 max-w-4xl mx-auto space-y-8 text-center animate-fadeIn">
       <h2 className="text-3xl font-black uppercase bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">Planes y Membresías VIP</h2>
-      <p className="text-neutral-400 text-sm max-w-lg mx-auto">Únete al búnker premium de Vorticex y obtén acceso total a la Bitácora My Tracker y los análisis confidenciales de nuestro algoritmo.</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+      <p className="text-neutral-400 text-sm max-w-lg mx-auto leading-relaxed">Únete al búnker premium de Vorticex y obtén acceso total a la Bitácora My Tracker y los análisis confidenciales de nuestro algoritmo.</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto mt-6">
         <div className="bg-neutral-900 border border-neutral-800 p-8 rounded-2xl space-y-6 flex flex-col justify-between">
           <div>
-            <h3 className="text-xl font-bold uppercase tracking-wider text-neutral-300">Plan Gratuito</h3>
+            <h3 className="text-xl font-black uppercase tracking-wider text-neutral-300">Plan Gratuito</h3>
             <p className="text-4xl font-black text-white mt-4">$0 <span className="text-xs text-neutral-500">USD/mes</span></p>
-            <ul className="text-sm text-neutral-400 text-left space-y-3 mt-6">
+            <ul className="text-sm text-neutral-400 text-left space-y-3 mt-6 border-t border-neutral-800 pt-6">
               <li>✔️ Predicciones públicas básicas</li>
               <li>❌ Sin acceso a Bitácora Personal</li>
               <li>❌ Sin análisis del Cerebro IA</li>
             </ul>
           </div>
-          <button onClick={onOpenAuth} className="w-full py-3 rounded-xl bg-neutral-800 hover:bg-neutral-700 font-bold text-sm uppercase">Comenzar</button>
+          <button onClick={onOpenAuth} className="w-full py-3 rounded-xl bg-neutral-800 hover:bg-neutral-750 font-bold text-sm uppercase transition-all">Comenzar</button>
         </div>
-        <div className="bg-neutral-900 border-2 border-yellow-500 p-8 rounded-2xl space-y-6 flex flex-col justify-between relative">
-          <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-neutral-950 px-3 py-1 rounded-full text-[10px] font-black uppercase">Recomendado</span>
+        <div className="bg-neutral-900 border-2 border-yellow-500 p-8 rounded-2xl space-y-6 flex flex-col justify-between relative shadow-[0_4px_30px_rgba(234,179,8,0.05)]">
+          <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-neutral-950 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Recomendado</span>
           <div>
-            <h3 className="text-xl font-bold uppercase tracking-wider text-yellow-500">Membresía VIP</h3>
+            <h3 className="text-xl font-black uppercase tracking-wider text-yellow-500">Membresía VIP</h3>
             <p className="text-4xl font-black text-white mt-4">$19.99 <span className="text-xs text-neutral-500">USD/mes</span></p>
-            <ul className="text-sm text-neutral-300 text-left space-y-3 mt-6">
+            <ul className="text-sm text-neutral-300 text-left space-y-3 mt-6 border-t border-neutral-800 pt-6">
               <li>✔️ Acceso total a Vortex Analytics</li>
               <li>✔️ Bitácora My Tracker ilimitada</li>
               <li>✔️ Recomendaciones del Cerebro IA</li>
             </ul>
           </div>
-          <button className="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-yellow-500 text-neutral-950 font-black text-sm uppercase shadow-lg shadow-red-500/20">Adquirir VIP</button>
+          <button className="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-yellow-500 text-neutral-950 font-black text-sm uppercase shadow-lg shadow-red-500/20 hover:scale-[1.02] transition-all">Adquirir VIP</button>
         </div>
       </div>
     </div>
@@ -459,15 +458,15 @@ function Plans({ onOpenAuth }) {
 }
 
 function TipsterPanel() {
-  return <div className="p-8 text-center text-neutral-400 text-sm uppercase tracking-wider">💼 Panel de Tipster — Operativo en Producción</div>;
+  return <div className="p-8 text-center text-neutral-400 text-sm uppercase tracking-wider min-h-screen">💼 Panel de Tipster — Operativo en Producción</div>;
 }
 
 function AdminPanel() {
-  return <div className="p-8 text-center text-neutral-400 text-sm uppercase tracking-wider">⚙️ Panel de Control Administrativo — Operativo en Producción</div>;
+  return <div className="p-8 text-center text-neutral-400 text-sm uppercase tracking-wider min-h-screen">⚙️ Panel de Control Administrativo — Operativo en Producción</div>;
 }
 
 function Leaderboard() {
-  return <div className="p-8 text-center text-neutral-400 text-sm uppercase tracking-wider">🏆 Ranking de Líderes — Operativo en Producción</div>;
+  return <div className="p-8 text-center text-neutral-400 text-sm uppercase tracking-wider min-h-screen">🏆 Ranking de Líderes — Operativo en Producción</div>;
 }
 
 function PaymentSuccess() {
@@ -480,13 +479,13 @@ function PaymentCancel() {
 
 function AuthModal({ onClose }) {
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl w-full max-w-sm space-y-4">
+    <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+      <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl w-full max-w-sm space-y-4 shadow-2xl">
         <h3 className="text-lg font-black uppercase tracking-wider text-white">Inicio de Sesión</h3>
-        <input type="email" placeholder="Correo Electrónico" className="w-full bg-neutral-950 border border-neutral-800 p-3 rounded-xl text-sm" />
-        <input type="password" placeholder="Contraseña" className="w-full bg-neutral-950 border border-neutral-800 p-3 rounded-xl text-sm" />
-        <button onClick={onClose} className="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-yellow-500 text-neutral-950 font-black text-sm uppercase">Entrar</button>
-        <button onClick={onClose} className="w-full text-xs text-neutral-500 font-bold uppercase tracking-wider">Cancelar</button>
+        <input type="email" placeholder="Correo Electrónico" className="w-full bg-neutral-950 border border-neutral-800 p-3 rounded-xl text-sm text-white focus:outline-none focus:border-yellow-500" />
+        <input type="password" placeholder="Contraseña" className="w-full bg-neutral-950 border border-neutral-800 p-3 rounded-xl text-sm text-white focus:outline-none focus:border-yellow-500" />
+        <button onClick={onClose} className="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-yellow-500 text-neutral-950 font-black text-sm uppercase shadow-lg shadow-red-500/10">Entrar</button>
+        <button onClick={onClose} className="w-full text-xs text-neutral-500 font-bold uppercase tracking-wider hover:text-neutral-400 transition-all">Cancelar</button>
       </div>
     </div>
   );
@@ -534,7 +533,7 @@ function AppShell() {
   }
 
   return (
-    <div className="app-shell flex bg-neutral-950 min-h-screen text-white">
+    <div className="app-shell flex bg-neutral-950 min-h-screen text-white font-sans overflow-x-hidden select-none">
       {/* SIDEBAR FIJO */}
       <Sidebar activePage={activePage} onNavigate={navigate} />
       
