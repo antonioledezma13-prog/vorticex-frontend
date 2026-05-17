@@ -19,7 +19,7 @@ export default function AnalyticsView() {
     });
     setLeaderboard([
       { id: 1, nombre: 'Vortex AI Bot', rango: 'ALGORITMO', yield: '+24.5%', winRate: '78.2%' },
-      { id: 2, nombre: 'Antonio Ledezma', rango: 'ADMINISTRADOR', yield: '+18.2%', winRate: '74.0%' }
+      { id: 2, nombre: 'dateromil', rango: 'ADMINISTRADOR', yield: '+18.2%', winRate: '74.0%' }
     ]);
     setLoading(false);
   }, [activeSubTab]);
