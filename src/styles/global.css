@@ -35,15 +35,9 @@ html, body, #root {
   overflow-x: hidden;
 }
 
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg-base); }
-::-webkit-scrollbar-thumb {
-  background: var(--gold-dim);
-  border-radius: 2px;
-}
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
 
 /* LAYOUT */
 .app-shell {
@@ -61,13 +55,8 @@ html, body, #root {
 }
 
 /* TYPOGRAPHY */
-.font-display {
-  font-family: 'Barlow Condensed', sans-serif;
-  letter-spacing: 0.04em;
-}
-.font-mono {
-  font-family: 'Share Tech Mono', monospace;
-}
+.font-display { font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.04em; }
+.font-mono    { font-family: 'Share Tech Mono', monospace; }
 
 /* LIVE BADGE */
 .live-badge {
@@ -96,7 +85,7 @@ html, body, #root {
 }
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.7); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
 }
 
 /* CARD BASE */
@@ -134,11 +123,7 @@ html, body, #root {
   align-items: center;
   gap: 8px;
 }
-.section-title svg {
-  width: 16px;
-  height: 16px;
-  opacity: 0.8;
-}
+.section-title svg { width: 16px; height: 16px; opacity: 0.8; }
 
 /* BUTTONS */
 .btn-primary {
@@ -153,15 +138,11 @@ html, body, #root {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
   transition: all 0.2s;
   box-shadow: 0 0 20px rgba(224, 26, 26, 0.3);
 }
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 30px rgba(224, 26, 26, 0.5);
-}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(224, 26, 26, 0.5); }
+
 .btn-secondary {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 14px;
@@ -176,12 +157,8 @@ html, body, #root {
   cursor: pointer;
   transition: all 0.2s;
 }
-.btn-secondary:hover {
-  background: rgba(245, 166, 35, 0.08);
-  box-shadow: 0 0 20px var(--gold-glow);
-}
+.btn-secondary:hover { background: rgba(245, 166, 35, 0.08); box-shadow: 0 0 20px var(--gold-glow); }
 
-/* VIEW ALL LINK */
 .view-all {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 13px;
@@ -200,9 +177,16 @@ html, body, #root {
 /* ANIMATIONS */
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-.animate-in {
-  animation: fade-in-up 0.5s ease both;
+.animate-in { animation: fade-in-up 0.5s ease both; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding-top: 52px; /* espacio para el hamburger */
+  }
 }
+
 @import './skeleton.css';
