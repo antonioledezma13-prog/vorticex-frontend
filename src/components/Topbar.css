@@ -148,7 +148,7 @@
   transform: translateY(-1px);
 }
 
-/* Botón hamburguesa (oculto por defecto en laptops) */
+/* Hamburger */
 .topbar-hamburger {
   display: none;
   background: none;
@@ -157,29 +157,34 @@
   cursor: pointer;
   padding: 8px;
 }
-.topbar-hamburger svg {
-  width: 24px;
-  height: 24px;
+.topbar-hamburger svg { width: 24px; height: 24px; }
+
+/* Logo móvil — oculto en desktop */
+.topbar-logo-mobile {
+  display: none;
+  align-items: center;
+  cursor: pointer;
 }
 
-/* ── RESPONSIVE PARA TABLETS Y MÓVILES ── */
+/* ── RESPONSIVE ── */
 @media (max-width: 990px) {
-  .topbar {
-    padding: 0 16px;
-  }
+  .topbar { padding: 0 16px; }
 
   .topbar-hamburger {
     display: block;
     order: 1;
   }
 
-  /* Acciones de login y planes a la derecha */
-  .topbar-actions {
+  .topbar-logo-mobile {
+    display: flex;
     order: 2;
+  }
+
+  .topbar-actions {
+    order: 3;
     margin-left: auto;
   }
 
-  /* Se esconde horizontalmente y pasa a modo lista vertical */
   .topbar-tabs {
     display: none;
     position: absolute;
@@ -197,10 +202,7 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
   }
 
-  /* Se activa al presionar la hamburguesa */
-  .topbar-tabs.show {
-    display: flex;
-  }
+  .topbar-tabs.show { display: flex; }
 
   .tab-btn {
     height: 40px;
@@ -210,77 +212,17 @@
     border-radius: 6px;
   }
 
-  .tab-btn:hover {
-    background: rgba(255, 255, 255, 0.03);
-  }
-
-  .tab-btn.active {
-    background: rgba(245, 166, 35, 0.06);
-  }
+  .tab-btn:hover { background: rgba(255, 255, 255, 0.03); }
+  .tab-btn.active { background: rgba(245, 166, 35, 0.06); }
 
   .tab-btn.active::after {
-    bottom: 0;
-    left: 0;
-    top: 0;
+    bottom: 0; left: 0; top: 0;
     width: 2px;
     height: 100%;
   }
 }
 
 @media (max-width: 520px) {
-  .btn-outline-sm, .btn-filled-sm {
-    padding: 0 10px;
-    font-size: 11px;
-  }
-  .btn-planes-sm {
-    padding: 0 8px;
-    font-size: 11px;
-  }
-}
-/* Logotipo móvil oculto por defecto en ordenadores */
-.topbar-logo-mobile {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-.logo-icon-mini {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 900;
-  font-size: 14px;
-  color: #0a0a0c;
-  box-shadow: 0 0 10px rgba(245, 166, 35, 0.2);
-}
-
-.logo-text-mini {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: var(--gold);
-}
-
-/* ── RESPONSIVE PARA MÓVILES ── */
-@media (max-width: 990px) {
-  /* Hacer que el logotipo móvil aparezca en pantallas pequeñas */
-  .topbar-logo-mobile {
-    display: flex;
-    order: 2; /* Lo posiciona al lado del botón de hamburguesa */
-  }
-  
-  .topbar-hamburger {
-    order: 1;
-  }
-  
-  .topbar-actions {
-    order: 3;
-  }
+  .btn-outline-sm, .btn-filled-sm { padding: 0 10px; font-size: 11px; }
+  .btn-planes-sm { padding: 0 8px; font-size: 11px; }
 }

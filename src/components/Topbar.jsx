@@ -13,8 +13,8 @@ export default function Topbar({ activeTab, onTabChange, onOpenAuth, onNavigate 
   return (
     <header className="topbar">
       {/* Botón de Hamburguesa - Visible solo en celulares y tablets */}
-      <button 
-        className="topbar-hamburger" 
+      <button
+        className="topbar-hamburger"
         onClick={() => setMenuOpen(!menuOpen)}
         aria-label="Toggle navigation"
       >
@@ -27,12 +27,16 @@ export default function Topbar({ activeTab, onTabChange, onOpenAuth, onNavigate 
         </svg>
       </button>
 
-{/* 🌟 NUEVO: LOGO EXCLUSIVO PARA MÓVILES 🌟 */}
+      {/* Logo real — visible solo en móvil */}
       <div className="topbar-logo-mobile" onClick={() => onNavigate && onNavigate('home')}>
-        <div className="logo-icon-mini">V</div>
-        <span className="logo-text-mini">VORTICEX</span>
-      </div>      
-{/* Menú de pestañas con clase dinámica para abrir/cerrar en móvil */}
+        <img
+          src={require('../logo.png')}
+          alt="Vorticex"
+          style={{ height: 32, width: 'auto', objectFit: 'contain' }}
+        />
+      </div>
+
+      {/* Menú de pestañas */}
       <nav className={`topbar-tabs ${menuOpen ? 'show' : ''}`}>
         {TABS.map(tab => {
           const key = tab.toLowerCase().replace(/ /g, '');
@@ -42,7 +46,7 @@ export default function Topbar({ activeTab, onTabChange, onOpenAuth, onNavigate 
               className={`tab-btn ${activeTab === key ? 'active' : ''}`}
               onClick={() => {
                 onTabChange(key);
-                setMenuOpen(false); // Cierra el menú móvil al hacer clic en una pestaña
+                setMenuOpen(false);
               }}
             >
               {tab}
@@ -68,7 +72,7 @@ export default function Topbar({ activeTab, onTabChange, onOpenAuth, onNavigate 
           <span className="notif-dot" />
         </button>
 
-        {/* Acceso de sesión dinámico del sistema */}
+        {/* Sesión */}
         {user ? (
           <UserMenu onNavigate={onNavigate} />
         ) : (
