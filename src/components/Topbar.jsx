@@ -27,7 +27,12 @@ export default function Topbar({ activeTab, onTabChange, onOpenAuth, onNavigate 
         </svg>
       </button>
 
-      {/* Menú de pestañas con clase dinámica para abrir/cerrar en móvil */}
+{/* 🌟 NUEVO: LOGO EXCLUSIVO PARA MÓVILES 🌟 */}
+      <div className="topbar-logo-mobile" onClick={() => onNavigate && onNavigate('home')}>
+        <div className="logo-icon-mini">V</div>
+        <span className="logo-text-mini">VORTICEX</span>
+      </div>      
+{/* Menú de pestañas con clase dinámica para abrir/cerrar en móvil */}
       <nav className={`topbar-tabs ${menuOpen ? 'show' : ''}`}>
         {TABS.map(tab => {
           const key = tab.toLowerCase().replace(/ /g, '');

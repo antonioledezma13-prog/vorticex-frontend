@@ -237,3 +237,50 @@
     font-size: 11px;
   }
 }
+/* Logotipo móvil oculto por defecto en ordenadores */
+.topbar-logo-mobile {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.logo-icon-mini {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 14px;
+  color: #0a0a0c;
+  box-shadow: 0 0 10px rgba(245, 166, 35, 0.2);
+}
+
+.logo-text-mini {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+}
+
+/* ── RESPONSIVE PARA MÓVILES ── */
+@media (max-width: 990px) {
+  /* Hacer que el logotipo móvil aparezca en pantallas pequeñas */
+  .topbar-logo-mobile {
+    display: flex;
+    order: 2; /* Lo posiciona al lado del botón de hamburguesa */
+  }
+  
+  .topbar-hamburger {
+    order: 1;
+  }
+  
+  .topbar-actions {
+    order: 3;
+  }
+}
