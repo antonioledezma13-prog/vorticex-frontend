@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 
 // =====================================================================
-// 🔑 CONTEXTO DE AUTENTICACIÓN (INTEGRADO Y SEGURO)
+// 🔑 CONTEXTO DE AUTENTICACIÓN (AUTO-CONTENIDO)
 // =====================================================================
 const AuthContext = createContext(null);
 
@@ -33,11 +33,14 @@ export function useAuth() {
 // =====================================================================
 function AnalyticsView({ user }) {
   const [activeSubTab, setActiveSubTab] = useState('vortex'); // vortex | leaderboard | mytracker
-  const [vortexData, setVortexData] = useState({
-    success: true,
+  const [loading, setLoading] = useState(false);
+  const userRole = user?.tipo_usuario || 'free'; 
+
+  // Datos simulados de alta calidad para renderizar de inmediato
+  const vortexData = {
     winRate: 76.4,
-    totalAnalizados: 24,
-    aciertos: 18,
+    totalAnalizados: 34,
+    aciertos: 26,
     roiProgress: [
       { fecha: '10 May', partido: 'Atalanta BC vs Bologna', bankroll: 108.50, resultado: 'Ganado' },
       { fecha: '12 May', partido: 'Newcastle vs West Ham', bankroll: 117.00, resultado: 'Ganado' },
@@ -45,16 +48,15 @@ function AnalyticsView({ user }) {
       { fecha: '15 May', partido: 'Real Sociedad vs Valencia', bankroll: 115.50, resultado: 'Perdido' },
       { fecha: '17 May', partido: 'Everton vs Sunderland', bankroll: 124.00, resultado: 'Ganado' }
     ]
-  });
+  };
   
-  const [leaderboard, setLeaderboard] = useState([
+  const leaderboard = [
     { id: 1, nombre: 'Vortex AI Bot', rango: 'ALGORITMO', yield: '+24.5%', winRate: '78.2%', picksEnviados: 120, racha: ['W', 'W', 'W', 'L', 'W'] },
     { id: 2, nombre: 'Antonio Ledezma', rango: 'ADMINISTRADOR', yield: '+18.2%', winRate: '74.0%', picksEnviados: 85, racha: ['W', 'W', 'L', 'W', 'W'] },
     { id: 3, nombre: 'Carlos Tipster', rango: 'TIPSTER', yield: '+12.4%', winRate: '68.5%', picksEnviados: 40, racha: ['L', 'W', 'W', 'D', 'W'] }
-  ]);
+  ];
 
-  const [myTracker, setMyTracker] = useState({
-    success: true,
+  const myTracker = {
     netProfit: 145.80,
     winRatePersonal: 72.5,
     historial: [
@@ -62,13 +64,10 @@ function AnalyticsView({ user }) {
       { id: 102, partido: 'Newcastle vs West Ham', miPrediccion: 'Local', estado: 'won', fecha: '17/05/2026' },
       { id: 103, partido: 'Real Sociedad vs Valencia', miPrediccion: 'Local', estado: 'lost', fecha: '17/05/2026' }
     ]
-  });
-
-  const [loading, setLoading] = useState(false);
-  const userRole = user?.tipo_usuario || 'free'; 
+  };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white p-4 sm:p-6 lg:p-8 font-sans animate-fadeIn">
+    <div className="p-4 sm:p-6 lg:p-8 animate-fadeIn">
       <div className="max-w-7xl mx-auto">
         
         {/* ENCABEZADO DE SECCIÓN */}
@@ -126,36 +125,36 @@ function AnalyticsView({ user }) {
           </div>
         ) : (
           <>
-            {activeSubTab === 'vortex' && vortexData && (
+            {activeSubTab === 'vortex' && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
                 <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl flex flex-col items-center justify-center text-center relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-[60px]"></div>
                   <span className="text-xs font-black text-emerald-400 uppercase tracking-widest mb-2">Efectividad 30D</span>
                   <div className="text-6xl font-black text-emerald-500 font-mono tracking-tight mb-2">{vortexData.winRate}%</div>
-                  <p className="text-xs text-neutral-400">Calculado sobre <span className="text-white font-bold">{vortexData.totalAnalizados} partidos</span> finalizados este mes.</p>
+                  <p className="text-xs text-neutral-400">Calculado sobre <span className="text-white font-bold">{vortexData.totalAnalizados} partidos</span> finalizados.</p>
                 </div>
 
                 <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl flex flex-col items-center justify-center text-center relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 rounded-full blur-[60px]"></div>
                   <span className="text-xs font-black text-yellow-500 uppercase tracking-widest mb-2">Retorno de Inversión</span>
                   <div className="text-6xl font-black text-yellow-500 font-mono tracking-tight mb-2">+{((vortexData.winRate - 50) * 1.8).toFixed(1)}%</div>
-                  <p className="text-xs text-neutral-400">Ganancia simulada operando con cuotas reales de mercado.</p>
+                  <p className="text-xs text-neutral-400">Ganancia acumulada sugerida de forma automatizada.</p>
                 </div>
 
                 <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl flex flex-col items-center justify-center text-center relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-[60px]"></div>
-                  <span className="text-xs font-black text-red-500 uppercase tracking-widest mb-2">Predicciones Acertadas</span>
+                  <span className="text-xs font-black text-red-500 uppercase tracking-widest mb-2">Picks Acertados</span>
                   <div className="text-6xl font-black text-red-500 font-mono tracking-tight mb-2">{vortexData.aciertos}</div>
-                  <p className="text-xs text-neutral-400">Sugerencias que resultaron en cobros confirmados.</p>
+                  <p className="text-xs text-neutral-400">Sugerencias que resultaron en cobros exitosos.</p>
                 </div>
 
                 <div className="lg:col-span-3 bg-neutral-900 border border-neutral-800 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold mb-4 uppercase tracking-wider text-neutral-300">Curva de Crecimiento del Bankroll</h3>
+                  <h3 className="text-lg font-bold mb-4 uppercase tracking-wider text-neutral-300">Curva de Crecimiento de Capital</h3>
                   <div className="space-y-3">
                     {vortexData.roiProgress.map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between p-3 bg-neutral-950/60 rounded-xl border border-neutral-850">
                         <div className="flex items-center gap-3">
-                          <span className={`w-2.5 h-2.5 rounded-full ${item.resultado === 'Ganado' ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                          <span className={`w-2.5 h-2.5 rounded-full ${item.resultado === 'Ganado' ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
                           <div>
                             <p className="text-sm font-bold text-white leading-none">{item.partido}</p>
                             <span className="text-[10px] text-neutral-500 mt-1 inline-block">{item.fecha}</span>
@@ -175,7 +174,7 @@ function AnalyticsView({ user }) {
             {activeSubTab === 'leaderboard' && (
               <div className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden animate-fadeIn">
                 <div className="p-6 border-b border-neutral-800 flex justify-between items-center">
-                  <h3 className="text-lg font-bold uppercase tracking-wider text-neutral-300">Ranking Oficial de Pronosticadores</h3>
+                  <h3 className="text-lg font-bold uppercase tracking-wider text-neutral-300">Ranking de Pronosticadores</h3>
                   <span className="text-xs bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-full border border-yellow-500/20 font-bold uppercase">Vortex Score Active</span>
                 </div>
                 <div className="overflow-x-auto">
@@ -226,10 +225,10 @@ function AnalyticsView({ user }) {
             {activeSubTab === 'mytracker' && (
               <div className="relative">
                 {(userRole === 'free' || !user) && (
-                  <div className="absolute inset-0 bg-neutral-950/85 backdrop-blur-md z-30 flex flex-col items-center justify-center text-center p-6 rounded-2xl border border-neutral-800/60 shadow-2xl animate-fadeIn">
-                    <div className="w-16 h-16 bg-red-950 border border-red-500/30 rounded-full flex items-center justify-center text-red-400 text-2xl mb-4 shadow-[0_0_20px_rgba(239,68,68,0.35)]">🔒</div>
-                    <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-2">Desbloquea tu Bitácora Inteligente de Inversión</h3>
-                    <p className="text-neutral-400 text-sm max-w-lg mb-6 leading-relaxed">Lleva el control exacto de tus apuestas, calcula tu rendimiento real, automatiza tus resultados y gestiona tu bankroll como un apostador profesional con el **Plan VIP**.</p>
+                  <div className="absolute inset-0 bg-neutral-950/90 backdrop-blur-md z-30 flex flex-col items-center justify-center text-center p-6 rounded-2xl border border-neutral-800/60 shadow-2xl animate-fadeIn">
+                    <div className="w-16 h-16 bg-red-950 border border-red-500/30 rounded-full flex items-center justify-center text-red-400 text-2xl mb-4 shadow-[0_0_20px_rgba(239,68,68,0.35)] animate-bounce">🔒</div>
+                    <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-2">Desbloquea tu Bitácora de Inversión</h3>
+                    <p className="text-neutral-400 text-sm max-w-lg mb-6 leading-relaxed">Lleva el control exacto de tus apuestas, calcula tu rendimiento real, automatiza tus resultados y gestiona tu bankroll como un profesional con el **Plan VIP**.</p>
                     <div className="flex flex-wrap justify-center gap-3">
                       <button className="px-6 py-3 bg-gradient-to-r from-red-600 to-yellow-500 text-neutral-950 font-black rounded-xl shadow-[0_4px_20px_rgba(239,68,68,0.35)] hover:scale-[1.02] transition-all">💎 Adquirir Plan VIP</button>
                     </div>
@@ -238,7 +237,7 @@ function AnalyticsView({ user }) {
 
                 <div className={`grid grid-cols-1 lg:grid-cols-3 gap-6 ${(userRole === 'free' || !user) ? 'filter blur-sm pointer-events-none select-none' : ''}`}>
                   <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl flex flex-col justify-between relative overflow-hidden">
-                    <span className="text-xs font-black text-neutral-400 uppercase tracking-widest mb-4">Tu Beneficio Neto</span>
+                    <span className="text-xs font-black text-neutral-400 uppercase tracking-widest mb-4">Beneficio Neto</span>
                     <div>
                       <div className="text-5xl font-black text-emerald-400 font-mono tracking-tight mb-2">+{myTracker?.netProfit ? `$${myTracker.netProfit}` : '$0'}</div>
                       <p className="text-xs text-neutral-400 leading-tight">Rentabilidad acumulada de todos tus picks seguidos.</p>
@@ -254,10 +253,10 @@ function AnalyticsView({ user }) {
                   </div>
 
                   <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl flex flex-col justify-between relative overflow-hidden">
-                    <span className="text-xs font-black text-neutral-400 uppercase tracking-widest mb-4">Estatus de Bankroll</span>
+                    <span className="text-xs font-black text-neutral-400 uppercase tracking-widest mb-4">Estado del Banco</span>
                     <div>
                       <div className="text-2xl font-black text-white uppercase tracking-tight mb-2">Salud Estable 🟢</div>
-                      <p className="text-xs text-neutral-400 leading-tight">Estás operando bajo márgenes de riesgo seguros sugeridos por el Cerebro IA.</p>
+                      <p className="text-xs text-neutral-400 leading-tight">Operando bajo márgenes de riesgo seguros calculados por el Cerebro IA.</p>
                     </div>
                   </div>
 
@@ -310,7 +309,7 @@ function Sidebar({ activePage, onNavigate }) {
   return (
     <div className="w-64 bg-neutral-900 border-r border-neutral-800 h-screen flex flex-col justify-between p-4 fixed left-0 top-0 z-30">
       <div>
-        <div className="flex items-center gap-2 mb-8 px-2 py-4">
+        <div className="flex items-center gap-2 mb-8 px-2 py-4 border-b border-neutral-850">
           <span className="text-2xl animate-pulse">🔥</span>
           <span className="font-black text-xl bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent uppercase tracking-wider">Vorticex</span>
         </div>
@@ -386,7 +385,7 @@ function Dashboard({ activeTab, onOpenAuth }) {
       <div className="relative overflow-hidden bg-neutral-900/40 p-6 rounded-2xl border border-neutral-800">
         <div className="absolute top-0 right-0 w-48 h-48 bg-red-500/10 rounded-full blur-[80px]"></div>
         <h2 className="text-2xl font-black uppercase tracking-tight text-white relative z-10">Top Mercados de Hoy</h2>
-        <p className="text-xs text-neutral-400 mt-1 relative z-10 font-medium">Sugerencias y análisis algorítmico del Cerebro IA en vivo.</p>
+        <p className="text-xs text-neutral-400 mt-1 relative z-10 font-medium font-sans">Sugerencias y análisis algorítmico del Cerebro IA en vivo.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sampleEvents.map(event => (
@@ -465,7 +464,7 @@ function AdminPanel() {
   return <div className="p-8 text-center text-neutral-400 text-sm uppercase tracking-wider min-h-screen">⚙️ Panel de Control Administrativo — Operativo en Producción</div>;
 }
 
-function Leaderboard() {
+function LeaderboardPage() {
   return <div className="p-8 text-center text-neutral-400 text-sm uppercase tracking-wider min-h-screen">🏆 Ranking de Líderes — Operativo en Producción</div>;
 }
 
@@ -478,13 +477,35 @@ function PaymentCancel() {
 }
 
 function AuthModal({ onClose }) {
+  const { login } = useAuth();
+  
+  const handleQuickLogin = (role) => {
+    login({
+      id: Math.floor(Math.random() * 100) + 1,
+      nombre: role === 'free' ? 'Usuario Gratuito' : (role === 'premium' ? 'Usuario VIP' : 'Antonio Admin'),
+      email: `${role}@vorticex.com`,
+      tipo_usuario: role,
+      vortex_score: 90.00
+    });
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
       <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl w-full max-w-sm space-y-4 shadow-2xl">
         <h3 className="text-lg font-black uppercase tracking-wider text-white">Inicio de Sesión</h3>
+        
+        {/* Accesos rápidos de prueba integrados */}
+        <div className="space-y-2 pb-4 border-b border-neutral-800">
+          <p className="text-xs text-neutral-500 font-bold uppercase tracking-wider">Prueba rápida de roles:</p>
+          <button onClick={() => handleQuickLogin('free')} className="w-full py-2 rounded-xl bg-neutral-850 hover:bg-neutral-800 border border-neutral-800 text-xs font-bold uppercase tracking-wide text-neutral-400 transition-all">Entrar como Gratuito (Free)</button>
+          <button onClick={() => handleQuickLogin('premium')} className="w-full py-2 rounded-xl bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 text-xs font-bold uppercase tracking-wide text-yellow-500 transition-all">Entrar como Suscriptor (VIP)</button>
+          <button onClick={() => handleQuickLogin('admin')} className="w-full py-2 rounded-xl bg-gradient-to-r from-red-600 to-yellow-500 text-neutral-950 text-xs font-black uppercase tracking-wide transition-all hover:scale-[1.01]">Entrar como Admin</button>
+        </div>
+
         <input type="email" placeholder="Correo Electrónico" className="w-full bg-neutral-950 border border-neutral-800 p-3 rounded-xl text-sm text-white focus:outline-none focus:border-yellow-500" />
         <input type="password" placeholder="Contraseña" className="w-full bg-neutral-950 border border-neutral-800 p-3 rounded-xl text-sm text-white focus:outline-none focus:border-yellow-500" />
-        <button onClick={onClose} className="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-yellow-500 text-neutral-950 font-black text-sm uppercase shadow-lg shadow-red-500/10">Entrar</button>
+        <button onClick={onClose} className="w-full py-3 rounded-xl bg-neutral-800 hover:bg-neutral-750 text-white font-bold text-sm uppercase">Entrar</button>
         <button onClick={onClose} className="w-full text-xs text-neutral-500 font-bold uppercase tracking-wider hover:text-neutral-400 transition-all">Cancelar</button>
       </div>
     </div>
@@ -506,7 +527,7 @@ function AppShell() {
 
   /**
    * Navegador global inteligente: gestiona las vistas de Dashboard
-   * y las páginas autónomas de administración/planes de forma síncrona.
+   * y las páginas autónomas del sistema.
    */
   function navigate(page) {
     if (['sports', 'politics', 'livefeed', 'analytics'].includes(page)) {
@@ -526,7 +547,7 @@ function AppShell() {
       case 'planes':      return <Plans onOpenAuth={() => setShowAuth(true)} />;
       case 'mipanel':     return <TipsterPanel />;
       case 'admin':       return <AdminPanel />;
-      case 'leaderboard': return <Leaderboard />;
+      case 'leaderboard': return <LeaderboardPage />;
       case 'analytics':   return <AnalyticsView user={user} />; // Inyección de prop 'user' robusta
       default:            return <Dashboard activeTab={activeTab} onOpenAuth={() => setShowAuth(true)} />;
     }
@@ -538,7 +559,7 @@ function AppShell() {
       <Sidebar activePage={activePage} onNavigate={navigate} />
       
       {/* CUERPO DE CONTENIDO CON DESPLAZAMIENTO HACIA LA IZQUIERDA DEL SIDEBAR */}
-      <div className="flex-1 pl-64 flex flex-col min-h-screen">
+      <div className="flex-1 pl-64 flex flex-col min-h-screen bg-neutral-950">
         <Topbar
           activeTab={activeTab}
           onTabChange={tab => { 
