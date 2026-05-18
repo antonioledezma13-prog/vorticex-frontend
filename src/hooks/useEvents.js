@@ -47,11 +47,21 @@ export function useEvents() {
             } catch { iaAnalisis = null; }
           }
 
-          // Parsear forma — viene como JSON string o array
+          // Parsear forma — soporta: array, JSON string, string con comas "W,D,L,W,W"
           function parsearForma(raw) {
             if (!raw) return null;
-            if (Array.isArray(raw)) return raw;
-            try { return JSON.parse(raw); } catch { return null; }
+            if (Array.isArray(raw)) return raw.filter(r => ['W','D','L'].includes(r));
+            if (typeof raw === 'string') {
+              // Intentar JSON primero
+              try {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) return parsed.filter(r => ['W','D','L'].includes(r));
+              } catch { /* no es JSON */ }
+              // String con comas: "W,D,L,W,W"
+              const partes = raw.split(',').map(s => s.trim()).filter(r => ['W','D','L'].includes(r));
+              return partes.length > 0 ? partes : null;
+            }
+            return null;
           }
 
           let tipster_tipo = null;
@@ -62,7 +72,7 @@ export function useEvents() {
           }
 
           return {
-            id:              e.id,
+            id:              e.id || e._id?.toString(),
             type:            tipo,
             title:           e.name        || 'Evento sin nombre',
             subtitle,
@@ -81,7 +91,7 @@ export function useEvents() {
             venue:           e.venue,
             status:          e.status,
             league:          e.league,
-            // ── Forma real para Sparkline ──
+            // ── Forma real para Sparkline (soporta W,D,L string del puente MongoDB) ──
             formaHome:       parsearForma(e.forma_home),
             formaAway:       parsearForma(e.forma_away),
             // ── Tipster ──
