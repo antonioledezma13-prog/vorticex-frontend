@@ -1,15 +1,13 @@
 // src/components/MarketCard.jsx
-// Sparkline basado en forma real: W sube, D plano, L baja
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import './MarketCard.css';
 
-// ─── SPARKLINE REAL basado en array ['W','D','L',...] ────────────────────────
+// ─── SPARKLINE ────────────────────────────────────────────────────────────────
 function Sparkline({ forma, color }) {
   const HEIGHT = 40;
   const WIDTH  = 98;
 
-  // Si no hay forma real, dibujar línea plana gris
   if (!forma || !Array.isArray(forma) || forma.length === 0) {
     const y = HEIGHT / 2;
     return (
@@ -20,13 +18,11 @@ function Sparkline({ forma, color }) {
     );
   }
 
-  // Construir puntos acumulando +1 (W), 0 (D), -1 (L)
   let acum = 0;
-  const valores = [0]; // empezar en 0
+  const valores = [0];
   for (const r of forma) {
     if (r === 'W')      acum += 1;
     else if (r === 'L') acum -= 1;
-    // D no cambia
     valores.push(acum);
   }
 
@@ -35,65 +31,129 @@ function Sparkline({ forma, color }) {
   const rng  = max - min || 1;
   const padY = 6;
 
-  // Mapear valores a coordenadas SVG (Y invertido — arriba es bueno)
   const pts = valores.map((v, i) => {
     const x = (i / (valores.length - 1)) * WIDTH;
     const y = HEIGHT - padY - ((v - min) / rng) * (HEIGHT - padY * 2);
     return `${x.toFixed(1)},${y.toFixed(1)}`;
   });
 
-  // Área bajo la curva para relleno sutil
-  const areaPoints = [
-    `0,${HEIGHT}`,
-    ...pts,
-    `${WIDTH},${HEIGHT}`,
-  ].join(' ');
+  const areaPoints = [`0,${HEIGHT}`, ...pts, `${WIDTH},${HEIGHT}`].join(' ');
 
   return (
     <svg width={WIDTH} height={HEIGHT} viewBox={`0 0 ${WIDTH} ${HEIGHT}`}>
-      {/* Área de relleno */}
-      <polygon
-        points={areaPoints}
-        fill={color}
-        opacity="0.08"
-      />
-      {/* Línea principal */}
-      <polyline
-        points={pts.join(' ')}
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.85"
-      />
-      {/* Punto final (estado actual) */}
+      <polygon points={areaPoints} fill={color} opacity="0.08" />
+      <polyline points={pts.join(' ')} fill="none" stroke={color}
+        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.85" />
       {pts.length > 0 && (() => {
-        const last  = pts[pts.length - 1].split(',');
-        return (
-          <circle
-            cx={parseFloat(last[0])}
-            cy={parseFloat(last[1])}
-            r="3"
-            fill={color}
-            opacity="0.9"
-          />
-        );
+        const last = pts[pts.length - 1].split(',');
+        return <circle cx={parseFloat(last[0])} cy={parseFloat(last[1])}
+          r="3" fill={color} opacity="0.9" />;
       })()}
     </svg>
+  );
+}
+
+// ─── MINI MODAL DE PRONÓSTICO INLINE ─────────────────────────────────────────
+function PredictionInline({ market, token, onDone }) {
+  const teamA  = market.teamA || market.home_team || 'Local';
+  const teamB  = market.teamB || market.away_team || 'Visitante';
+  const isPol  = market.type === 'politics';
+
+  const opciones = isPol
+    ? ['Opción A', 'Opción B', 'Empate técnico']
+    : [`${teamA} gana`, `${teamB} gana`, 'Empate'];
+
+  const [opcion,   setOpcion]   = useState('');
+  const [custom,   setCustom]   = useState('');
+  const [loading,  setLoading]  = useState(false);
+  const [msg,      setMsg]      = useState('');
+
+  async function submit() {
+    const prediction = opcion === '__custom__' ? custom.trim() : opcion;
+    if (!prediction) return;
+    setLoading(true);
+    setMsg('');
+    try {
+      const res  = await fetch('/api/predictions', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({ event_id: market.id, prediction }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setMsg(`✅ Pronóstico registrado: "${prediction}"`);
+      setTimeout(() => onDone(prediction), 1200);
+    } catch (err) {
+      setMsg(`❌ ${err.message}`);
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="mc-pred-inline">
+      <div className="mc-pred-label">🎯 Tu pronóstico</div>
+      <div className="mc-pred-opciones">
+        {opciones.map(op => (
+          <button
+            key={op}
+            className={`mc-pred-btn ${opcion === op ? 'active' : ''}`}
+            onClick={() => { setOpcion(op); setCustom(''); setMsg(''); }}
+          >
+            {op}
+          </button>
+        ))}
+        <button
+          className={`mc-pred-btn mc-pred-btn-custom ${opcion === '__custom__' ? 'active' : ''}`}
+          onClick={() => { setOpcion('__custom__'); setMsg(''); }}
+        >
+          ✏️
+        </button>
+      </div>
+
+      {opcion === '__custom__' && (
+        <input
+          className="mc-pred-input"
+          type="text"
+          placeholder="Escribe tu pronóstico..."
+          value={custom}
+          onChange={e => setCustom(e.target.value)}
+          autoFocus
+        />
+      )}
+
+      {msg ? (
+        <div className={`mc-pred-msg ${msg.startsWith('✅') ? 'ok' : 'err'}`}>{msg}</div>
+      ) : (
+        <button
+          className="mc-pred-confirm"
+          onClick={submit}
+          disabled={loading || !opcion || (opcion === '__custom__' && !custom.trim())}
+        >
+          {loading ? 'Registrando...' : 'Confirmar'}
+        </button>
+      )}
+    </div>
   );
 }
 
 // ─── MARKET CARD ─────────────────────────────────────────────────────────────
 export default function MarketCard({ market, onOpenAuth }) {
   const { user, token } = useAuth();
-  const [loading,   setLoading]   = useState(false);
-  const [error,     setError]     = useState('');
-  const [purchased, setPurchased] = useState(market.purchased || false);
+  const [loading,    setLoading]    = useState(false);
+  const [error,      setError]      = useState('');
+  const [purchased,  setPurchased]  = useState(market.purchased || false);
+  const [showPred,   setShowPred]   = useState(false);
+  const [miPred,     setMiPred]     = useState(market.my_prediction || null);
 
   const isLive       = market.isLive;
   const isPolitics   = market.type === 'politics';
   const tieneTipster = !!market.tipster_id;
+
+  // El usuario logueado es tipster o admin → puede pronosticar
+  const esTipster = user && (user.tipo_usuario === 'tipster' || user.tipo_usuario === 'admin');
+  const yaPronostico = !!miPred;
+  // No se puede pronosticar en un evento propio (si el card tiene tipster_id igual al user)
+  const esEventoPropio = esTipster && market.tipster_id && market.tipster_id === user?.id;
 
   const tipsterBadgeColor =
     market.tipster_tipo === 'oraculo' ? '#e01a1a' :
@@ -103,7 +163,6 @@ export default function MarketCard({ market, onOpenAuth }) {
     market.tipster_tipo === 'oraculo' ? '🔮 Oráculo' :
     market.tipster_tipo === 'pro'     ? '⭐ Pro'     : '👤 Novato';
 
-  // Parsear forma desde string JSON o array
   function parsearForma(raw) {
     if (!raw) return null;
     if (Array.isArray(raw)) return raw;
@@ -121,12 +180,9 @@ export default function MarketCard({ market, onOpenAuth }) {
     setError('');
     try {
       const res  = await fetch('/api/payments/pick/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type':  'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ eventId: market.id, tipsterId: market.tipster_id }),
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({ eventId: market.id, tipsterId: market.tipster_id }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error al crear la orden');
@@ -142,6 +198,11 @@ export default function MarketCard({ market, onOpenAuth }) {
       setError(err.message);
       setLoading(false);
     }
+  }
+
+  function handlePredDone(prediction) {
+    setMiPred(prediction);
+    setShowPred(false);
   }
 
   return (
@@ -217,13 +278,13 @@ export default function MarketCard({ market, onOpenAuth }) {
         </div>
       </div>
 
-      {/* ── Sparklines de racha real ── */}
+      {/* ── Sparklines ── */}
       <div className="mc-sparklines">
         <Sparkline forma={formaHome} color="var(--red-bright, #e01a1a)" />
         <Sparkline forma={formaAway} color="var(--gold, #f5a623)" />
       </div>
 
-      {/* ── Leyenda de forma ── */}
+      {/* ── Forma ── */}
       {(formaHome || formaAway) && (
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
           {[formaHome, formaAway].map((forma, idx) => forma && (
@@ -260,7 +321,6 @@ export default function MarketCard({ market, onOpenAuth }) {
         </div>
       </div>
 
-      {/* ── Barra de progreso ── */}
       <div className="mc-progress-bar">
         <div className="mc-progress-fill" style={{ width: `${market.probA || 50}%` }} />
       </div>
@@ -299,8 +359,8 @@ export default function MarketCard({ market, onOpenAuth }) {
         </div>
       )}
 
-      {/* ── Botón pick ── */}
-      {tieneTipster && (
+      {/* ── Botón pick (compra para usuarios) ── */}
+      {tieneTipster && !esTipster && (
         <div style={{ marginTop: 12 }}>
           {purchased ? (
             <div style={{
@@ -325,6 +385,28 @@ export default function MarketCard({ market, onOpenAuth }) {
                   80% al Tipster · Pago seguro PayPal
                 </span>
               )}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ── Zona de pronóstico para tipsters ── */}
+      {esTipster && !esEventoPropio && market.status !== 'finished' && (
+        <div style={{ marginTop: 12 }}>
+          {yaPronostico ? (
+            <div className="mc-pred-done">
+              <span>🎯</span>
+              <span>Tu pronóstico: <strong>{miPred}</strong></span>
+            </div>
+          ) : showPred ? (
+            <PredictionInline
+              market={market}
+              token={token}
+              onDone={handlePredDone}
+            />
+          ) : (
+            <button className="mc-pred-open-btn" onClick={() => setShowPred(true)}>
+              🎯 Registrar mi pronóstico
             </button>
           )}
         </div>

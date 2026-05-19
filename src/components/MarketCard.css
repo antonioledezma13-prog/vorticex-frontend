@@ -201,3 +201,145 @@
   border-radius: 2px;
   transition: width 0.5s ease;
 }
+/* ── PREDICTION INLINE ── */
+.mc-pred-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(245,166,35,0.06);
+  border: 1px solid rgba(245,166,35,0.2);
+  border-radius: 10px;
+  animation: pred-in 0.18s ease;
+}
+
+@keyframes pred-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.mc-pred-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.mc-pred-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mc-pred-btn {
+  padding: 6px 11px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.mc-pred-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.mc-pred-btn.active {
+  background: rgba(245,166,35,0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.mc-pred-btn-custom {
+  border-style: dashed;
+  padding: 6px 10px;
+}
+
+.mc-pred-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text-primary);
+  font-size: 13px;
+  padding: 8px 10px;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.mc-pred-input:focus { border-color: var(--gold); }
+
+.mc-pred-confirm {
+  width: 100%;
+  padding: 8px;
+  border-radius: 7px;
+  border: none;
+  background: linear-gradient(135deg, var(--red), var(--gold));
+  color: #fff;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.mc-pred-confirm:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mc-pred-msg {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.mc-pred-msg.ok  { background: rgba(34,197,94,0.12);  color: #22c55e; }
+.mc-pred-msg.err { background: rgba(224,26,26,0.12);  color: #e01a1a; }
+
+/* ── PRONÓSTICO YA HECHO ── */
+.mc-pred-done {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.25);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.mc-pred-done strong { color: #22c55e; }
+
+/* ── BOTÓN ABRIR PRONÓSTICO ── */
+.mc-pred-open-btn {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px dashed rgba(245,166,35,0.4);
+  background: rgba(245,166,35,0.06);
+  color: var(--gold);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.mc-pred-open-btn:hover {
+  background: rgba(245,166,35,0.12);
+  border-color: var(--gold);
+}
