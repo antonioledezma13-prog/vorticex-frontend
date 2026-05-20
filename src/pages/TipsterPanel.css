@@ -630,3 +630,44 @@
   .tp-filter-group  { flex-wrap: wrap; }
   .tw-retiro-form   { flex-direction: column; }
 }
+/* Score ticker con animación post-auditoría */
+.tp-score-ticker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tp-score-ticker.tick-up .tp-score-val {
+  animation: score-up 0.6s ease;
+}
+
+.tp-score-ticker.tick-down .tp-score-val {
+  animation: score-down 0.6s ease;
+}
+
+@keyframes score-up {
+  0%   { color: var(--gold); }
+  30%  { color: #22c55e; transform: scale(1.15); }
+  100% { color: var(--gold); transform: scale(1); }
+}
+
+@keyframes score-down {
+  0%   { color: var(--gold); }
+  30%  { color: #e01a1a; transform: scale(0.95); }
+  100% { color: var(--gold); transform: scale(1); }
+}
+
+.tp-score-delta {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 2px;
+  animation: delta-fade 4s ease forwards;
+}
+
+@keyframes delta-fade {
+  0%   { opacity: 1; transform: translateY(0); }
+  70%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-4px); }
+}

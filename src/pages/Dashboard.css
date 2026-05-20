@@ -140,3 +140,141 @@
     padding: 10px 16px;
   }
 }
+/* Section header */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.section-title svg {
+  width: 18px;
+  height: 18px;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+/* Predictions feed */
+.pred-feed-lock-note {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.pred-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Pred feed card */
+.pred-feed-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--card-bg, rgba(255,255,255,0.04));
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+
+.pred-feed-card:hover { background: rgba(255,255,255,0.06); }
+
+.pfc-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 140px;
+}
+
+.pfc-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--red), var(--gold-dim));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  border: 2px solid;
+}
+
+.pfc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pfc-nombre {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pfc-score {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+}
+
+.pfc-pick {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pfc-pick-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.pfc-pick-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.05);
+  padding: 2px 8px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  display: inline-block;
+}
+
+.pfc-result {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  min-width: 90px;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .pred-feed-card { flex-wrap: wrap; }
+  .pfc-left       { min-width: unset; }
+  .pfc-result     { min-width: unset; text-align: left; }
+}
