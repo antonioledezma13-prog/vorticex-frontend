@@ -239,11 +239,12 @@ export default function AdminPanel() {
   const [motivoRechazo, setMotivoRechazo] = useState('');
 
   // Eventos state
-  const [eventos,       setEventos]       = useState([]);
-  const [showCreate,    setShowCreate]    = useState(false);
-  const [resultModal,   setResultModal]   = useState(null);
-  const [auditMsg,      setAuditMsg]      = useState('');
-  const [statusLoading, setStatusLoading] = useState(null);
+  const [eventos,          setEventos]          = useState([]);
+  const [showCreate,       setShowCreate]       = useState(false);
+  const [resultModal,      setResultModal]       = useState(null);
+  const [auditMsg,         setAuditMsg]          = useState('');
+  const [statusLoading,    setStatusLoading]     = useState(null);
+  const [regenLoading,     setRegenLoading]      = useState(false);
 
   // Shared state
   const [loading,       setLoading]       = useState(false);
@@ -373,6 +374,26 @@ export default function AdminPanel() {
     ));
     setAuditMsg(`✅ Evento finalizado. ${auditoria?.procesados ?? 0} pronóstico(s) auditado(s).`);
     setTimeout(() => setAuditMsg(''), 6000);
+  }
+
+  // ── Regenerar sparklines de todos los eventos ──
+  async function handleRegenerarFormas() {
+    setRegenLoading(true);
+    setError('');
+    try {
+      const res  = await fetch('/api/admin/regenerar-formas', {
+        method:  'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setAuditMsg('🔄 Regeneración de sparklines iniciada en background. Las gráficas se actualizarán en ~30 segundos.');
+      setTimeout(() => setAuditMsg(''), 8000);
+    } catch (err) {
+      setError(`Error regenerando formas: ${err.message}`);
+    } finally {
+      setRegenLoading(false);
+    }
   }
 
   function fmtDate(iso) {
@@ -538,9 +559,19 @@ export default function AdminPanel() {
                 Finalizados ({eventosFinished.length})
               </button>
             </div>
-            <button className="ap-btn-crear" onClick={() => setShowCreate(true)}>
-              ➕ Nuevo Evento
-            </button>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                className="ap-btn-regen"
+                onClick={handleRegenerarFormas}
+                disabled={regenLoading}
+                title="Regenera las gráficas sparkline de todos los eventos activos"
+              >
+                {regenLoading ? '⏳ Regenerando...' : '📊 Regenerar Sparklines'}
+              </button>
+              <button className="ap-btn-crear" onClick={() => setShowCreate(true)}>
+                ➕ Nuevo Evento
+              </button>
+            </div>
           </div>
 
           {loading ? (
