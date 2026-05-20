@@ -1,18 +1,23 @@
 // src/hooks/useEvents.js
-// Hook central de eventos — mapea la respuesta del backend al formato
-// que consumen MarketCard y Dashboard.
-// Ahora incluye my_prediction / my_result inyectado por eventsController.
-
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-// Normalizar el campo "type" que puede venir como 'sport' o 'sports'
 function normalizeType(t) {
   if (!t) return 'sports';
   return t === 'sport' ? 'sports' : t;
 }
 
+// Parsear forma desde string JSON, array, o null
+function parsarForma(raw) {
+  if (!raw) return null;
+  if (Array.isArray(raw)) return raw;
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
 function mapEvent(e) {
+  const formaHome = parsarForma(e.forma_home || e.formaHome);
+  const formaAway = parsarForma(e.forma_away || e.formaAway);
+
   return {
     // Identidad
     id:       e.id || e._id?.toString(),
@@ -23,23 +28,23 @@ function mapEvent(e) {
     name:     e.name,
 
     // Tipo y estado
-    type:     normalizeType(e.type),
-    status:   e.status || 'upcoming',
-    isLive:   e.status === 'live',
+    type:   normalizeType(e.type),
+    status: e.status || 'upcoming',
+    isLive: e.status === 'live',
 
-    // Equipos / contendientes
-    teamA:    e.home_team || 'Local',
-    teamB:    e.away_team || 'Visitante',
+    // Equipos
+    teamA:     e.home_team || 'Local',
+    teamB:     e.away_team || 'Visitante',
     home_team: e.home_team,
     away_team: e.away_team,
-    league:   e.league,
-    country:  e.country,
+    league:    e.league,
+    country:   e.country,
 
     // Probabilidades y odds
-    probA:    e.prob_home ?? 50,
-    probB:    e.prob_away ?? 50,
-    oddsA:    e.odds_home ?? '—',
-    oddsB:    e.odds_away ?? '—',
+    probA:  e.prob_home ?? 50,
+    probB:  e.prob_away ?? 50,
+    oddsA:  e.odds_home ?? '—',
+    oddsB:  e.odds_away ?? '—',
 
     // IA
     ia_analisis:      e.ia_analisis  || null,
@@ -48,9 +53,9 @@ function mapEvent(e) {
       ? e.ia_analisis.slice(0, 120) + '...'
       : null,
 
-    // Forma reciente (sparkline)
-    formaHome: e.forma_home || e.formaHome || null,
-    formaAway: e.forma_away || e.formaAway || null,
+    // ✅ Sparklines reales — formaHome/formaAway que MarketCard espera
+    formaHome,
+    formaAway,
 
     // Tipster del evento
     tipster_id:     e.tipster_id     || null,
@@ -61,7 +66,7 @@ function mapEvent(e) {
     _locked:   e._locked  ?? true,
     purchased: e.purchased ?? 0,
 
-    // ✅ Pronóstico del usuario logueado (inyectado por eventsController)
+    // Pronóstico del usuario logueado
     my_prediction: e.my_prediction || null,
     my_result:     e.my_result     || null,
 
@@ -100,7 +105,6 @@ export function useEvents() {
 
   useEffect(() => {
     fetchEvents();
-    // Refresco cada 2 minutos para capturar cambios de status en vivo
     const interval = setInterval(fetchEvents, 2 * 60 * 1000);
     return () => clearInterval(interval);
   }, [fetchEvents]);
