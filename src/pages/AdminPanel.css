@@ -499,3 +499,32 @@
   .ap-form-full  { grid-column: 1; }
   .ap-stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── USUARIOS TAB ── */
+.ap-usuarios-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.ap-user-search {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 13px;
+  padding: 8px 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 260px;
+}
+
+.ap-user-search:focus { border-color: var(--gold); }
+
+.ap-rol-select-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

@@ -1,5 +1,5 @@
 // src/components/MarketCard.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import './MarketCard.css';
 
@@ -131,11 +131,23 @@ export default function MarketCard({ market, onOpenAuth }) {
   const [purchased, setPurchased] = useState(market.purchased || false);
   const [showPred,  setShowPred]  = useState(false);
   const [miPred,    setMiPred]    = useState(market.my_prediction || null);
+  const [pickPrecio, setPickPrecio] = useState(null); // { precio, tier, tierLabel }
 
   const isLive       = market.isLive || market.status === 'live';
   const isPolitics   = market.type === 'politics';
   const tieneTipster = !!market.tipster_id;
   const esTipster    = user && (user.tipo_usuario === 'tipster' || user.tipo_usuario === 'admin');
+
+  // Fetch precio dinámico por tier al montar si hay tipster y no está comprado
+  useEffect(() => {
+    if (!tieneTipster || !market.id || purchased) return;
+    fetch(`/api/payments/pick/precio/${market.id}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.precio) setPickPrecio(data); })
+      .catch(() => {});
+  }, [market.id, tieneTipster, purchased, token]);
   const yaPronostico = !!miPred;
   const esEventoPropio = esTipster && market.tipster_id && market.tipster_id === user?.id;
 
@@ -397,7 +409,7 @@ export default function MarketCard({ market, onOpenAuth }) {
               cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1,
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
             }}>
-              {loading ? '⚙️ Redirigiendo...' : `🎯 Pick de ${market.tipster_nombre} — $2.00`}
+              {loading ? '⚙️ Redirigiendo...' : `🎯 Pick de ${market.tipster_nombre} — $${pickPrecio?.precio?.toFixed(2) || '2.00'}`}
               {!loading && (
                 <span style={{ fontSize: '0.68rem', fontWeight: 400, opacity: 0.85 }}>
                   80% al Tipster · Pago seguro PayPal

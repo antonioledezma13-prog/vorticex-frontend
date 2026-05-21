@@ -138,6 +138,58 @@ function CreateEventModal({ token, onClose, onCreated }) {
           <button className="ap-btn-cancel" onClick={onClose}>Cancelar</button>
         </div>
       </div>
+      {/* ── Modal asignar tipster a evento ── */}
+      {asignModal && (
+        <div className="ap-modal-overlay" onClick={() => setAsignModal(null)}>
+          <div className="ap-modal" onClick={e => e.stopPropagation()}>
+            <div className="ap-modal-title">👤 Asignar Tipster</div>
+            <div className="ap-modal-sub">
+              Evento: <strong>
+                {asignModal.home_team && asignModal.away_team
+                  ? `${asignModal.home_team} vs ${asignModal.away_team}`
+                  : asignModal.name}
+              </strong>
+            </div>
+
+            {(() => {
+              const tipsters = usuarios.filter(u =>
+                ['tipster','oraculo','admin'].includes(u.tipo_usuario)
+              );
+              return tipsters.length === 0 ? (
+                <div style={{ color:'var(--text-dim)', fontSize:13, padding:'12px 0' }}>
+                  No hay tipsters disponibles. Cambia el rol de un usuario primero.
+                </div>
+              ) : (
+                <div className="ap-res-opciones">
+                  {tipsters.map(t => (
+                    <button key={t.id}
+                      className={`ap-res-btn ${asignModal.tipster_id === t.id ? 'active' : ''}`}
+                      onClick={() => handleAsignarTipster(asignModal.id, t.id, t.nombre)}>
+                      {t.nombre}
+                      <span style={{ fontSize:10, marginLeft:6, opacity:0.7 }}>
+                        ({t.tipo_usuario} · {parseFloat(t.vortex_score||0).toFixed(1)} pts)
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              );
+            })()}
+
+            <div className="ap-modal-actions" style={{ marginTop:16 }}>
+              {asignModal.tipster_id && (
+                <button className="ap-btn-rechazar"
+                  onClick={() => handleAsignarTipster(asignModal.id, null, null)}>
+                  🗑 Quitar tipster
+                </button>
+              )}
+              <button className="ap-btn-cancel" onClick={() => setAsignModal(null)}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
@@ -220,6 +272,58 @@ function ResultadoModal({ evento, token, onClose, onResolved }) {
           <button className="ap-btn-cancel" onClick={onClose}>Cancelar</button>
         </div>
       </div>
+      {/* ── Modal asignar tipster a evento ── */}
+      {asignModal && (
+        <div className="ap-modal-overlay" onClick={() => setAsignModal(null)}>
+          <div className="ap-modal" onClick={e => e.stopPropagation()}>
+            <div className="ap-modal-title">👤 Asignar Tipster</div>
+            <div className="ap-modal-sub">
+              Evento: <strong>
+                {asignModal.home_team && asignModal.away_team
+                  ? `${asignModal.home_team} vs ${asignModal.away_team}`
+                  : asignModal.name}
+              </strong>
+            </div>
+
+            {(() => {
+              const tipsters = usuarios.filter(u =>
+                ['tipster','oraculo','admin'].includes(u.tipo_usuario)
+              );
+              return tipsters.length === 0 ? (
+                <div style={{ color:'var(--text-dim)', fontSize:13, padding:'12px 0' }}>
+                  No hay tipsters disponibles. Cambia el rol de un usuario primero.
+                </div>
+              ) : (
+                <div className="ap-res-opciones">
+                  {tipsters.map(t => (
+                    <button key={t.id}
+                      className={`ap-res-btn ${asignModal.tipster_id === t.id ? 'active' : ''}`}
+                      onClick={() => handleAsignarTipster(asignModal.id, t.id, t.nombre)}>
+                      {t.nombre}
+                      <span style={{ fontSize:10, marginLeft:6, opacity:0.7 }}>
+                        ({t.tipo_usuario} · {parseFloat(t.vortex_score||0).toFixed(1)} pts)
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              );
+            })()}
+
+            <div className="ap-modal-actions" style={{ marginTop:16 }}>
+              {asignModal.tipster_id && (
+                <button className="ap-btn-rechazar"
+                  onClick={() => handleAsignarTipster(asignModal.id, null, null)}>
+                  🗑 Quitar tipster
+                </button>
+              )}
+              <button className="ap-btn-cancel" onClick={() => setAsignModal(null)}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
@@ -228,9 +332,16 @@ function ResultadoModal({ evento, token, onClose, onResolved }) {
 export default function AdminPanel() {
   const { user, token } = useAuth();
 
-  const [mainTab,  setMainTab]  = useState('retiros');   // 'retiros' | 'eventos'
-  const [retTab,   setRetTab]   = useState('pending');   // tab de retiros
-  const [evTab,    setEvTab]    = useState('active');    // tab de eventos: 'active' | 'finished'
+  const [mainTab,  setMainTab]  = useState('retiros');   // 'retiros' | 'eventos' | 'usuarios'
+  const [retTab,   setRetTab]   = useState('pending');
+  const [evTab,    setEvTab]    = useState('active');
+
+  // Usuarios state
+  const [usuarios,    setUsuarios]    = useState([]);
+  const [userSearch,  setUserSearch]  = useState('');
+  const [userFilter,  setUserFilter]  = useState('all');
+  const [roleLoading, setRoleLoading] = useState(null);
+  const [asignModal,  setAsignModal]  = useState(null);
 
   // Retiros state
   const [retiros,       setRetiros]       = useState([]);
@@ -305,6 +416,7 @@ export default function AdminPanel() {
   useEffect(() => {
     if (mainTab === 'retiros') fetchRetiros();
     if (mainTab === 'eventos') fetchEventos();
+    if (mainTab === 'usuarios') fetchUsuarios();
   }, [mainTab, fetchRetiros, fetchEventos]);
 
   // ── Aprobar retiro ──
@@ -366,6 +478,68 @@ export default function AdminPanel() {
     }
   }
 
+  // ── Fetch usuarios ──
+  const fetchUsuarios = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res  = await fetch('/api/admin/users', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al cargar usuarios');
+      setUsuarios(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  // ── Cambiar rol ──
+  async function handleCambiarRol(userId, nuevoRol) {
+    setRoleLoading(userId);
+    setError('');
+    try {
+      const res  = await fetch(`/api/auth/role/${userId}`, {
+        method:  'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({ tipo_usuario: nuevoRol }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setUsuarios(us => us.map(u => u.id === userId ? { ...u, tipo_usuario: nuevoRol } : u));
+      setAuditMsg(`✅ Rol de ${data.usuario?.nombre} actualizado a "${nuevoRol}"`);
+      setTimeout(() => setAuditMsg(''), 5000);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setRoleLoading(null);
+    }
+  }
+
+  // ── Asignar tipster_id a evento ──
+  async function handleAsignarTipster(eventoId, tipsterId, tipsterNombre) {
+    setError('');
+    try {
+      const res  = await fetch(`/api/events/${eventoId}/tipster`, {
+        method:  'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({ tipster_id: tipsterId, tipster_nombre: tipsterNombre }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setEventos(evs => evs.map(e =>
+        e.id === eventoId ? { ...e, tipster_id: tipsterId, tipster_nombre: tipsterNombre } : e
+      ));
+      setAsignModal(null);
+      setAuditMsg(`✅ Tipster "${tipsterNombre}" asignado al evento`);
+      setTimeout(() => setAuditMsg(''), 5000);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   // ── Callback: resultado registrado ──
   function handleResolved(eventoActualizado, auditoria) {
     setResultModal(null);
@@ -421,7 +595,7 @@ export default function AdminPanel() {
           <p className="ap-subtitle">Control total de Vorticex</p>
         </div>
         <button className="ap-refresh"
-          onClick={() => mainTab === 'retiros' ? fetchRetiros() : fetchEventos()}
+          onClick={() => mainTab === 'retiros' ? fetchRetiros() : mainTab === 'eventos' ? fetchEventos() : fetchUsuarios()}
           disabled={loading}>
           {loading ? '⟳' : '↺'} Actualizar
         </button>
@@ -436,6 +610,10 @@ export default function AdminPanel() {
         <button className={`ap-main-tab ${mainTab === 'eventos' ? 'active' : ''}`}
           onClick={() => setMainTab('eventos')}>
           🗓 Gestión de Eventos
+        </button>
+        <button className={`ap-main-tab ${mainTab === 'usuarios' ? 'active' : ''}`}
+          onClick={() => setMainTab('usuarios')}>
+          👥 Usuarios & Tipsters
         </button>
       </div>
 
@@ -668,6 +846,174 @@ export default function AdminPanel() {
         </>
       )}
 
+      {/* ══════════════════════════════════════════
+          SECCIÓN: USUARIOS & TIPSTERS
+      ══════════════════════════════════════════ */}
+      {mainTab === 'usuarios' && (
+        <>
+          <div className="ap-usuarios-toolbar">
+            <input
+              className="ap-user-search"
+              type="text"
+              placeholder="Buscar por nombre o email..."
+              value={userSearch}
+              onChange={e => setUserSearch(e.target.value)}
+            />
+            <div className="ap-tabs" style={{ marginBottom: 0 }}>
+              {['all','free','tipster','premium','oraculo','admin'].map(f => (
+                <button key={f}
+                  className={`ap-tab ${userFilter === f ? 'ap-tab-active' : ''}`}
+                  onClick={() => setUserFilter(f)}>
+                  {f === 'all' ? 'Todos' : f.charAt(0).toUpperCase() + f.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="ap-loading">Cargando usuarios...</div>
+          ) : (
+            (() => {
+              const filtrados = usuarios.filter(u => {
+                const matchFilter = userFilter === 'all' || u.tipo_usuario === userFilter;
+                const matchSearch = !userSearch ||
+                  u.nombre?.toLowerCase().includes(userSearch.toLowerCase()) ||
+                  u.email?.toLowerCase().includes(userSearch.toLowerCase());
+                return matchFilter && matchSearch;
+              });
+
+              return filtrados.length === 0 ? (
+                <div className="ap-empty">No hay usuarios con ese criterio</div>
+              ) : (
+                <div className="ap-table-wrap">
+                  <table className="ap-table">
+                    <thead>
+                      <tr>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Rol Actual</th>
+                        <th>VortexScore</th>
+                        <th>Cambiar Rol</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filtrados.map(u => {
+                        const ROL_COLOR = {
+                          free:'#6b7280', tipster:'#f5a623',
+                          premium:'#3b82f6', oraculo:'#e01a1a', admin:'#8b5cf6',
+                        };
+                        const color = ROL_COLOR[u.tipo_usuario] || '#6b7280';
+                        return (
+                          <tr key={u.id}>
+                            <td className="ap-cell-tipster">
+                              <div className="ap-mini-avatar">
+                                {u.nombre?.[0]?.toUpperCase() || '?'}
+                              </div>
+                              <span style={{ fontWeight: 600 }}>{u.nombre}</span>
+                            </td>
+                            <td className="ap-cell-mono">{u.email}</td>
+                            <td>
+                              <span className="ap-status-badge"
+                                style={{ color, borderColor: color+'55', background: color+'18' }}>
+                                {u.tipo_usuario}
+                              </span>
+                            </td>
+                            <td>
+                              <span style={{ fontFamily:"'Share Tech Mono',monospace",
+                                color:'var(--gold)', fontSize:14 }}>
+                                {parseFloat(u.vortex_score||0).toFixed(1)}
+                              </span>
+                            </td>
+                            <td>
+                              <div className="ap-rol-select-wrap">
+                                <select
+                                  className="ap-form-select"
+                                  style={{ padding:'5px 8px', fontSize:12 }}
+                                  value={u.tipo_usuario}
+                                  disabled={roleLoading === u.id}
+                                  onChange={e => handleCambiarRol(u.id, e.target.value)}
+                                >
+                                  {['free','tipster','premium','oraculo','admin'].map(r => (
+                                    <option key={r} value={r}>{r}</option>
+                                  ))}
+                                </select>
+                                {roleLoading === u.id && (
+                                  <span style={{ fontSize:11, color:'var(--text-dim)' }}>
+                                    Guardando...
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })()
+          )}
+
+          {/* Sub-sección: asignar tipster a eventos activos */}
+          <div className="tp-section-title" style={{ marginTop: 8 }}>
+            🎯 Asignar Tipster a Eventos
+          </div>
+          <p style={{ fontSize:13, color:'var(--text-dim)', marginBottom: 8 }}>
+            Selecciona un evento activo y asígnale un tipster para que su pick aparezca en el MarketCard.
+          </p>
+          {(() => {
+            const eventosActivos = eventos.filter(e => e.status !== 'finished');
+            return eventosActivos.length === 0 ? (
+              <div className="ap-empty" style={{ padding:24 }}>
+                No hay eventos activos. Crea uno en "Gestión de Eventos".
+              </div>
+            ) : (
+              <div className="ap-table-wrap">
+                <table className="ap-table">
+                  <thead>
+                    <tr>
+                      <th>Evento</th>
+                      <th>Liga</th>
+                      <th>Tipster Asignado</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {eventosActivos.map(ev => {
+                      const nombre = ev.home_team && ev.away_team
+                        ? `${ev.home_team} vs ${ev.away_team}` : ev.name;
+                      return (
+                        <tr key={ev.id}>
+                          <td style={{ fontWeight:600, fontSize:13 }}>{nombre}</td>
+                          <td className="ap-cell-date">{ev.league || '—'}</td>
+                          <td>
+                            {ev.tipster_nombre ? (
+                              <span style={{ color:'var(--gold)', fontSize:13, fontWeight:600 }}>
+                                ✅ {ev.tipster_nombre}
+                              </span>
+                            ) : (
+                              <span style={{ color:'var(--text-dim)', fontSize:12 }}>
+                                Sin asignar
+                              </span>
+                            )}
+                          </td>
+                          <td>
+                            <button className="ap-btn-resultado"
+                              onClick={() => setAsignModal(ev)}>
+                              👤 Asignar
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })()}
+        </>
+      )}
+
       {/* ── Modal rechazar retiro ── */}
       {rejectModal && (
         <div className="ap-modal-overlay" onClick={() => setRejectModal(null)}>
@@ -711,6 +1057,58 @@ export default function AdminPanel() {
           onResolved={handleResolved}
         />
       )}
+      {/* ── Modal asignar tipster a evento ── */}
+      {asignModal && (
+        <div className="ap-modal-overlay" onClick={() => setAsignModal(null)}>
+          <div className="ap-modal" onClick={e => e.stopPropagation()}>
+            <div className="ap-modal-title">👤 Asignar Tipster</div>
+            <div className="ap-modal-sub">
+              Evento: <strong>
+                {asignModal.home_team && asignModal.away_team
+                  ? `${asignModal.home_team} vs ${asignModal.away_team}`
+                  : asignModal.name}
+              </strong>
+            </div>
+
+            {(() => {
+              const tipsters = usuarios.filter(u =>
+                ['tipster','oraculo','admin'].includes(u.tipo_usuario)
+              );
+              return tipsters.length === 0 ? (
+                <div style={{ color:'var(--text-dim)', fontSize:13, padding:'12px 0' }}>
+                  No hay tipsters disponibles. Cambia el rol de un usuario primero.
+                </div>
+              ) : (
+                <div className="ap-res-opciones">
+                  {tipsters.map(t => (
+                    <button key={t.id}
+                      className={`ap-res-btn ${asignModal.tipster_id === t.id ? 'active' : ''}`}
+                      onClick={() => handleAsignarTipster(asignModal.id, t.id, t.nombre)}>
+                      {t.nombre}
+                      <span style={{ fontSize:10, marginLeft:6, opacity:0.7 }}>
+                        ({t.tipo_usuario} · {parseFloat(t.vortex_score||0).toFixed(1)} pts)
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              );
+            })()}
+
+            <div className="ap-modal-actions" style={{ marginTop:16 }}>
+              {asignModal.tipster_id && (
+                <button className="ap-btn-rechazar"
+                  onClick={() => handleAsignarTipster(asignModal.id, null, null)}>
+                  🗑 Quitar tipster
+                </button>
+              )}
+              <button className="ap-btn-cancel" onClick={() => setAsignModal(null)}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
