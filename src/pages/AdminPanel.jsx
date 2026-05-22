@@ -138,58 +138,6 @@ function CreateEventModal({ token, onClose, onCreated }) {
           <button className="ap-btn-cancel" onClick={onClose}>Cancelar</button>
         </div>
       </div>
-      {/* ── Modal asignar tipster a evento ── */}
-      {asignModal && (
-        <div className="ap-modal-overlay" onClick={() => setAsignModal(null)}>
-          <div className="ap-modal" onClick={e => e.stopPropagation()}>
-            <div className="ap-modal-title">👤 Asignar Tipster</div>
-            <div className="ap-modal-sub">
-              Evento: <strong>
-                {asignModal.home_team && asignModal.away_team
-                  ? `${asignModal.home_team} vs ${asignModal.away_team}`
-                  : asignModal.name}
-              </strong>
-            </div>
-
-            {(() => {
-              const tipsters = usuarios.filter(u =>
-                ['tipster','oraculo','admin'].includes(u.tipo_usuario)
-              );
-              return tipsters.length === 0 ? (
-                <div style={{ color:'var(--text-dim)', fontSize:13, padding:'12px 0' }}>
-                  No hay tipsters disponibles. Cambia el rol de un usuario primero.
-                </div>
-              ) : (
-                <div className="ap-res-opciones">
-                  {tipsters.map(t => (
-                    <button key={t.id}
-                      className={`ap-res-btn ${asignModal.tipster_id === t.id ? 'active' : ''}`}
-                      onClick={() => handleAsignarTipster(asignModal.id, t.id, t.nombre)}>
-                      {t.nombre}
-                      <span style={{ fontSize:10, marginLeft:6, opacity:0.7 }}>
-                        ({t.tipo_usuario} · {parseFloat(t.vortex_score||0).toFixed(1)} pts)
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              );
-            })()}
-
-            <div className="ap-modal-actions" style={{ marginTop:16 }}>
-              {asignModal.tipster_id && (
-                <button className="ap-btn-rechazar"
-                  onClick={() => handleAsignarTipster(asignModal.id, null, null)}>
-                  🗑 Quitar tipster
-                </button>
-              )}
-              <button className="ap-btn-cancel" onClick={() => setAsignModal(null)}>
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }
@@ -272,58 +220,6 @@ function ResultadoModal({ evento, token, onClose, onResolved }) {
           <button className="ap-btn-cancel" onClick={onClose}>Cancelar</button>
         </div>
       </div>
-      {/* ── Modal asignar tipster a evento ── */}
-      {asignModal && (
-        <div className="ap-modal-overlay" onClick={() => setAsignModal(null)}>
-          <div className="ap-modal" onClick={e => e.stopPropagation()}>
-            <div className="ap-modal-title">👤 Asignar Tipster</div>
-            <div className="ap-modal-sub">
-              Evento: <strong>
-                {asignModal.home_team && asignModal.away_team
-                  ? `${asignModal.home_team} vs ${asignModal.away_team}`
-                  : asignModal.name}
-              </strong>
-            </div>
-
-            {(() => {
-              const tipsters = usuarios.filter(u =>
-                ['tipster','oraculo','admin'].includes(u.tipo_usuario)
-              );
-              return tipsters.length === 0 ? (
-                <div style={{ color:'var(--text-dim)', fontSize:13, padding:'12px 0' }}>
-                  No hay tipsters disponibles. Cambia el rol de un usuario primero.
-                </div>
-              ) : (
-                <div className="ap-res-opciones">
-                  {tipsters.map(t => (
-                    <button key={t.id}
-                      className={`ap-res-btn ${asignModal.tipster_id === t.id ? 'active' : ''}`}
-                      onClick={() => handleAsignarTipster(asignModal.id, t.id, t.nombre)}>
-                      {t.nombre}
-                      <span style={{ fontSize:10, marginLeft:6, opacity:0.7 }}>
-                        ({t.tipo_usuario} · {parseFloat(t.vortex_score||0).toFixed(1)} pts)
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              );
-            })()}
-
-            <div className="ap-modal-actions" style={{ marginTop:16 }}>
-              {asignModal.tipster_id && (
-                <button className="ap-btn-rechazar"
-                  onClick={() => handleAsignarTipster(asignModal.id, null, null)}>
-                  🗑 Quitar tipster
-                </button>
-              )}
-              <button className="ap-btn-cancel" onClick={() => setAsignModal(null)}>
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }
